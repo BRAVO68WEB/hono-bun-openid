@@ -1,6 +1,6 @@
 import { Context, Next } from "hono";
 
-import verify from "./verify";
+import { verifySession } from "./verify";
 
 export const middleware = async (ctx: Context, next: Next) => {
     try {
@@ -11,11 +11,12 @@ export const middleware = async (ctx: Context, next: Next) => {
             throw new Error("No authorization header");
         }
         const token: string = authHeader;
-        const { payload: user } = await verify(token);
+        const user = await verifySession(token);
 
-        if (!user) {
-            throw new Error("No user");
-        }
+        console.log(user);
+        // if (!user) {
+        //     throw new Error("No user");
+        // }
 
         ctx.set("user", {
             userData: user,
